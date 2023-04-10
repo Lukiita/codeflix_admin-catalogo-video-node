@@ -1,0 +1,27 @@
+{
+  "name": "codeflix",
+  "version": "1.0.0",
+  "description": "Admin do catálogo de vídeos",
+  "main": "index.js",
+  "scripts": {
+    "ts-node": "ts-node",
+    "tsc": "tsc",
+    "clean:tsc": "rm tsconfig.tsbuildinfo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lukiita/codeflix_admin-catalogo-video-node.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lukiita/codeflix_admin-catalogo-video-node/issues"
+  },
+  "homepage": "https://github.com/Lukiita/codeflix_admin-catalogo-video-node#readme",
+  "devDependencies": {
+    "@types/node": "14.14.31",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}
