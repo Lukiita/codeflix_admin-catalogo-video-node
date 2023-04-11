@@ -20,7 +20,7 @@ export class Category extends Entity<CategoryProperties> {
     return this.props.name;
   }
 
-  private set name(value) {
+  private set name(value: string) {
     this.props.name = value;
   }
 
