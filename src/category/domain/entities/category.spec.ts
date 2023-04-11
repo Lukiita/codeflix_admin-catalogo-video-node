@@ -1,5 +1,6 @@
-import { validate as uuidValidate } from 'uuid';
-import { Category } from './category';
+import UniqueEntityId from '../../../@seedwork/domain/unique-entity-id.vo';
+import { Category, CategoryProperties } from './category';
+
 describe('Category Tests', () => {
 
   afterEach(() => {
@@ -60,22 +61,23 @@ describe('Category Tests', () => {
   });
 
   test('id prop', ()=> {
-    let category = new Category({ name: 'Movie' });
-    expect(category.id).not.toBeNull();
-    expect(uuidValidate(category.id)).toBeTruthy();
+    type CategoryData = { props: CategoryProperties, id?: UniqueEntityId };
+    const data: CategoryData[] = [
+      { props: { name: 'Movie' } },
+      { props: { name: 'Movie' }, id: null },
+      { props: { name: 'Movie' }, id: undefined },
+      { props: { name: 'Movie' }, id: new UniqueEntityId() },
+    ];
 
-    category = new Category({ name: 'Movie' }, null);
-    expect(category.id).not.toBeNull();
-    expect(uuidValidate(category.id)).toBeTruthy();
-
-    category = new Category({ name: 'Movie' }, undefined);
-    expect(category.id).not.toBeNull();
-    expect(uuidValidate(category.id)).toBeTruthy();
-
-    const id = '48fac1a8-b6c0-40ab-8c58-e737b4635595';
-    category = new Category({ name: 'Movie' }, id);
-    expect(category.id).toBe(id);
-    expect(uuidValidate(category.id)).toBeTruthy();
+    data.forEach(props => {
+      const category = new Category(props.props, props.id);      
+      expect(category.id).not.toBeNull();
+      expect(category.id).toBeInstanceOf(UniqueEntityId);
+      
+      if (props.id) {
+        expect(category.id).toBe(props.id);
+      }
+    });
   });
 
   test('getter of name prop', () => {
