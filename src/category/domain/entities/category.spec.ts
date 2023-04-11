@@ -142,4 +142,23 @@ describe('Category Tests', () => {
     expect(category.description).toBe('Description of category');
   });
 
+  test('activate category', () => {
+    const category = new Category({ name: 'Movie', is_active: false });
+    expect(category.name).toBe('Movie');
+    expect(category.is_active).toBeFalsy();
+
+    category.activate();
+    expect(category.name).toBe('Movie');
+    expect(category.is_active).toBeTruthy();
+  });
+
+  test('deactivate category', () => {
+    const category = new Category({ name: 'Movie'});
+    expect(category.name).toBe('Movie');
+    expect(category.is_active).toBeTruthy();
+
+    category.deactivate();
+    expect(category.name).toBe('Movie');
+    expect(category.is_active).toBeFalsy();
+  });
 });
