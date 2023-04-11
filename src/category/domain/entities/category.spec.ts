@@ -127,4 +127,19 @@ describe('Category Tests', () => {
     category = new Category({ name: 'Movie', created_at: createdAt});
     expect(category.created_at).toBe(createdAt);
   });
+  
+  test('update name and description props', () => {
+    const category = new Category({ name: 'Movie' });
+    expect(category.name).toBe('Movie');
+    expect(category.description).toBeNull();
+
+    category.update('New Category');
+    expect(category.name).toBe('New Category');
+    expect(category.description).toBeNull();
+
+    category.update('New category 2', 'Description of category');
+    expect(category.name).toBe('New category 2');
+    expect(category.description).toBe('Description of category');
+  });
+
 });
