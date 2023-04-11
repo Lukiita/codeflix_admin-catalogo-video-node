@@ -52,4 +52,12 @@ export class Category extends Entity<CategoryProperties> {
     this.name = name;
     this.description = description;
   }
+
+  public activate(): void {
+    this.is_active = true;
+  }
+
+  public deactivate(): void {
+    this.is_active = false;
+  }
 }
