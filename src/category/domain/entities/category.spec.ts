@@ -72,10 +72,9 @@ describe('Category Tests', () => {
     data.forEach(props => {
       const category = new Category(props.props, props.id);      
       expect(category.id).not.toBeNull();
-      expect(category.id).toBeInstanceOf(UniqueEntityId);
-      
+      expect(category.uniqueEntityId).toBeInstanceOf(UniqueEntityId);
       if (props.id) {
-        expect(category.id).toBe(props.id);
+        expect(category.id).toBe(props.id.value);
       }
     });
   });
