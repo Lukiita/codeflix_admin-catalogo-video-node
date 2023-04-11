@@ -36,4 +36,18 @@ describe('ValueObject Unit Tests', () => {
       expect(vo + '').toBe(value.expected);
     });
   });
+
+  it('should must a immutable object', () => {
+    const obj = {
+      prop1: 'value1',
+      deep: { prop2: 'value2', prop3: new Date()}
+    };
+
+    const vo = new StubValueObject(obj);
+
+    expect(() => (vo as any).value.prop1 = 'new value').toThrow("Cannot assign to read only property 'prop1' of object '#<Object>'");
+    expect(() => (vo as any).value.deep.prop2 = 'new value').toThrow("Cannot assign to read only property 'prop2' of object '#<Object>'");
+    expect(typeof vo.value.deep.prop3).toBe('object');
+    expect(vo.value.deep.prop3).toBeInstanceOf(Date);
+  });
 });
