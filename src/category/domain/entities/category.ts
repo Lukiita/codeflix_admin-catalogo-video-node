@@ -20,6 +20,10 @@ export class Category extends Entity<CategoryProperties> {
     return this.props.name;
   }
 
+  private set name(value) {
+    this.props.name = value;
+  }
+
   public get description(): string {
     return this.props.description;
   }
@@ -42,5 +46,10 @@ export class Category extends Entity<CategoryProperties> {
 
   private set created_at(value: Date) {
     this.props.created_at = value ?? new Date();
+  }
+
+  public update(name: string, description?: string): void {
+    this.name = name;
+    this.description = description;
   }
 }
