@@ -128,7 +128,7 @@ describe('Category Tests', () => {
     expect(category.created_at).toBe(createdAt);
   });
   
-  test('update name and description props', () => {
+  it('should update a category', () => {
     const category = new Category({ name: 'Movie' });
     expect(category.name).toBe('Movie');
     expect(category.description).toBeNull();
@@ -142,7 +142,7 @@ describe('Category Tests', () => {
     expect(category.description).toBe('Description of category');
   });
 
-  test('activate category', () => {
+  it('should active a category', () => {
     const category = new Category({ name: 'Movie', is_active: false });
     expect(category.name).toBe('Movie');
     expect(category.is_active).toBeFalsy();
@@ -152,7 +152,7 @@ describe('Category Tests', () => {
     expect(category.is_active).toBeTruthy();
   });
 
-  test('deactivate category', () => {
+  it('should disable a category', () => {
     const category = new Category({ name: 'Movie'});
     expect(category.name).toBe('Movie');
     expect(category.is_active).toBeTruthy();
