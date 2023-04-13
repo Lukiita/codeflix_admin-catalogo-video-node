@@ -1,4 +1,4 @@
-import ValidationError from '../errors/validation-error';
+import { ValidationError } from '../errors/validation-error';
 import ValidatorRules from './validators-rules';
 
 type Values = {
@@ -39,17 +39,17 @@ function runRule({
 
 describe('ValidatorRules Unit Tests', () => {
   test('values method', () => {
-     const validator = ValidatorRules.values('some value', 'field');
-     expect(validator).toBeInstanceOf(ValidatorRules);
-     expect(validator['value']).toBe('some value');
-     expect(validator['property']).toBe('field');
+    const validator = ValidatorRules.values('some value', 'field');
+    expect(validator).toBeInstanceOf(ValidatorRules);
+    expect(validator['value']).toBe('some value');
+    expect(validator['property']).toBe('field');
   });
 
   test('required validation throw ValidationError', () => {
     const arrange: Values[] = [
-      { value: '', property: 'field'},
-      { value: null, property: 'field'},
-      { value: undefined, property: 'field'},
+      { value: '', property: 'field' },
+      { value: null, property: 'field' },
+      { value: undefined, property: 'field' },
     ];
 
     arrange.forEach(item => {
@@ -64,10 +64,10 @@ describe('ValidatorRules Unit Tests', () => {
 
   test('required validation pass', () => {
     const arrange: Values[] = [
-      { value: 0, property: 'field'},
-      { value: 5, property: 'field'},
-      { value: 'some value', property: 'field'},
-      { value: false, property: 'field'},
+      { value: 0, property: 'field' },
+      { value: 5, property: 'field' },
+      { value: 'some value', property: 'field' },
+      { value: false, property: 'field' },
     ];
 
     arrange.forEach(item => {

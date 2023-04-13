@@ -1,10 +1,10 @@
-import ValidationError from '../errors/validation-error';
+import { ValidationError } from '../errors/validation-error';
 
 export default class ValidatorRules {
 
-  private constructor(private value: any, private property: string) {}
+  private constructor(private value: any, private property: string) { }
 
-  static values(value: any, property: string) { 
+  static values(value: any, property: string) {
     return new ValidatorRules(value, property);
   }
 
@@ -36,7 +36,7 @@ export default class ValidatorRules {
     if (!isEmpty(this.value) && typeof this.value !== 'boolean') {
       throw new ValidationError(`The ${this.property} must be a boolean`);
     }
-    
+
     return this;
   }
 
