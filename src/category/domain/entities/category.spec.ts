@@ -1,7 +1,13 @@
 import UniqueEntityId from '../../../@seedwork/domain/value-objects/unique-entity-id.vo';
 import { Category, CategoryProperties } from './category';
 
+
+
 describe('Category Tests', () => {
+
+  beforeEach(() => {
+    Category.validate = jest.fn();
+  });
 
   afterEach(() => {
     jest.useRealTimers();
@@ -12,6 +18,7 @@ describe('Category Tests', () => {
     jest.useFakeTimers().setSystemTime(createdAt);
 
     let category = new Category({ name: 'Movie' });
+    expect(Category.validate).toBeCalled();
     expect(category.props).toStrictEqual({
       name: 'Movie',
       description: null,
@@ -140,6 +147,7 @@ describe('Category Tests', () => {
     category.update('New category 2', 'Description of category');
     expect(category.name).toBe('New category 2');
     expect(category.description).toBe('Description of category');
+    expect(Category.validate).toBeCalledTimes(3);
   });
 
   it('should active a category', () => {
