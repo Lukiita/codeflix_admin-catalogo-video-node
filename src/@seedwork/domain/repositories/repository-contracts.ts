@@ -40,7 +40,7 @@ export class SearchParams {
 
   private set page(value: number) {
     let _page = +value;
-    
+
     if (Number.isNaN(_page) || _page <= 0 || parseInt(_page.toString()) !== _page) {
       _page = 1;
     }
@@ -54,7 +54,7 @@ export class SearchParams {
 
   private set per_page(value: number) {
     let _per_page = value === true as any ? this._per_page : +value;
-    
+
     const isInvalidValue = Number.isNaN(_per_page) || _per_page <= 0 || parseInt(_per_page.toString()) !== _per_page;
     if (isInvalidValue) {
       _per_page = this._per_page;
@@ -72,12 +72,12 @@ export class SearchParams {
     this._sort = isEmptyValue ? null : `${value}`;
   }
 
-  public get sort_dir(): SortDirection{
+  public get sort_dir(): SortDirection {
     return this._sort_dir;
   }
 
   private set sort_dir(value: SortDirection | null) {
-    if(!this.sort) {
+    if (!this.sort) {
       this._sort_dir = null;
       return;
     }
@@ -96,6 +96,56 @@ export class SearchParams {
   }
 }
 
-export interface ISearchableRepository<E extends Entity, SearchInput, SearchOutput> extends IRepository<E> {
+type SearchResultProps<E extends Entity, Filter> = {
+  items: E[];
+  total: number;
+  current_page: number;
+  per_page: number;
+  sort: string | null;
+  sort_dir: SortDirection;
+  filter: Filter;
+}
+
+export class SearchResult<E extends Entity, Filter = string> {
+  public readonly items: E[];
+  public readonly total: number;
+  public readonly current_page: number;
+  public readonly per_page: number;
+  public readonly last_page: number;
+  public readonly sort: string | null;
+  public readonly sort_dir: SortDirection;
+  public readonly filter: Filter;
+
+  constructor(props: SearchResultProps<E, Filter>) {
+    this.items = props.items;
+    this.total = props.total;
+    this.current_page = props.current_page;
+    this.per_page = props.per_page;
+    this.last_page = Math.ceil(this.total / this.per_page);
+    this.sort = props.sort;
+    this.sort_dir = props.sort_dir;
+    this.filter = props.filter;
+  }
+
+  public toJSON() {
+    return {
+      items: this.items,
+      total: this.total,
+      current_page: this.current_page,
+      per_page: this.per_page,
+      last_page: Math.ceil(this.total / this.per_page),
+      sort: this.sort,
+      sort_dir: this.sort_dir,
+      filter: this.filter,
+    }
+  }
+}
+
+export interface ISearchableRepository<
+  E extends Entity,
+  Filter = string,
+  SearchInput = SearchParams,
+  SearchOutput = SearchResult<E, Filter>
+> extends IRepository<E> {
   search(props: SearchInput): Promise<SearchOutput>;
 }
