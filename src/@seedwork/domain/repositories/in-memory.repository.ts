@@ -1,9 +1,9 @@
 import Entity from '../entity/entity';
 import NotFoundError from '../errors/not-found.error';
 import UniqueEntityId from '../value-objects/unique-entity-id.vo';
-import { IRepository } from './repository-contracts';
+import { IRepository, ISearchableRepository } from './repository-contracts';
 
-export default abstract class InMemoryRepository<E extends Entity> implements IRepository<E> {
+export abstract class InMemoryRepository<E extends Entity> implements IRepository<E> {
   public items: E[] = [];
 
   async insert(entity: E): Promise<void> {
@@ -39,5 +39,12 @@ export default abstract class InMemoryRepository<E extends Entity> implements IR
     }
 
     return item;
+  }
+}
+
+export abstract class InMemorySearchableRepository<E extends Entity> extends InMemoryRepository<E> implements ISearchableRepository<E, any, any> {
+  
+  search(props: any): Promise<any> {
+    throw new Error('Method not implemented.');
   }
 }
