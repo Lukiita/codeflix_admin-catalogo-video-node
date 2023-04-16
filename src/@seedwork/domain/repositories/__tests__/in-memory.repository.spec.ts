@@ -15,7 +15,7 @@ class StubInMemoryRepository extends InMemoryRepository<StubEntity> {}
 describe('InMemoryRepository Unit Tests', () => {
   let repository: StubInMemoryRepository;
 
-  beforeEach(() => repository = new StubInMemoryRepository())
+  beforeEach(() => repository = new StubInMemoryRepository());
 
   it('should inserts a new entity', async () => {
     const entity = new StubEntity({name: 'name value', price: 5 });

@@ -61,7 +61,7 @@ describe('InMemorySearchableRepository Unit Tests', () => {
       filteredItems = await repository['applyFilter'](items, 'no-filter');
       expect(filteredItems).toHaveLength(0);
       expect(spyFilterFunction).toHaveBeenCalledTimes(3);
-    })
+    });
   });
 
   describe('applySort function', () => {
