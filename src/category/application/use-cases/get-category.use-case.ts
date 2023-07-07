@@ -1,7 +1,8 @@
+import IUseCase from '../../../@seedwork/application/use-case';
 import CategoryRepository from '../../domain/repositories/category.repository';
 import { CategoryOutputDto } from '../dto/category-output.dto';
 
-export default class GetCreateCategoryUseCase {
+export default class GetCreateCategoryUseCase implements IUseCase<Input, CategoryOutputDto>  {
 
   constructor(private categoryRepo: CategoryRepository.Repository) {}
 
