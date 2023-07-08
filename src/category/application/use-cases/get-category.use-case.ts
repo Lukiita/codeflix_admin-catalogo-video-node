@@ -1,6 +1,6 @@
 import IUseCase from '../../../@seedwork/application/use-case';
 import CategoryRepository from '../../domain/repositories/category.repository';
-import { CategoryOutputDto } from '../dto/category-output.dto';
+import { CategoryOutputDto, CategoryOutputMapper } from '../dto/category-output';
 
 export default class GetCreateCategoryUseCase implements IUseCase<Input, CategoryOutputDto>  {
 
@@ -9,13 +9,7 @@ export default class GetCreateCategoryUseCase implements IUseCase<Input, Categor
   async execute(input: Input): Promise<CategoryOutputDto> {
     const entity = await this.categoryRepo.findById(input.id);
 
-    return {
-      id: entity.id,
-      name: entity.name,
-      description: entity.description,
-      is_active: entity.is_active,
-      created_at: entity.created_at
-    }
+    return CategoryOutputMapper.toOutput(entity);
   }
 }
 
