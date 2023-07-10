@@ -1,5 +1,4 @@
-import { PaginationOutputMapper } from '@seedwork/application/dto/pagination-output';
-import { PaginationOutputDto } from '../../../@seedwork/application/dto/pagination-output';
+import { PaginationOutputDto, PaginationOutputMapper } from '../../../@seedwork/application/dto/pagination-output';
 import { SearchInputDto } from '../../../@seedwork/application/dto/search-input';
 import IUseCase from '../../../@seedwork/application/use-case';
 import CategoryRepository from '../../domain/repositories/category.repository';
@@ -18,7 +17,7 @@ export default class ListCategoriesUseCase implements IUseCase<Input, Output>  {
   private toOutput(searchResult: CategoryRepository.SearchResult): Output {
     return {
       items: searchResult.items.map(item => CategoryOutputMapper.toOutput(item)),
-      ...PaginationOutputMapper.toPaginationOutput(searchResult)
+      ...PaginationOutputMapper.toOutput(searchResult)
     }
   }
 }

@@ -84,7 +84,7 @@ export abstract class InMemorySearchableRepository<E extends Entity> extends InM
 
   protected async applyPaginate(items: E[], page: number, per_page: number): Promise<E[]> {
     const start = (page - 1) * per_page; // 1 * 15 = 15
-    const limit = start + per_page; // 15 - 15 = 30
+    const limit = start + per_page; // 15 + 15 = 30
 
     return items.slice(start, limit);
    }

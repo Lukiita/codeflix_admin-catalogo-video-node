@@ -2,7 +2,7 @@ import {
   SearchParams as DefaultSearchParams,
   SearchResult as DefaultSearchResult,
   ISearchableRepository,
-} from '@seedwork/domain/repositories/repository-contracts';
+} from '../../../@seedwork/domain/repositories/repository-contracts';
 import { Category } from '../entities/category';
 
 export namespace CategoryRepository {
