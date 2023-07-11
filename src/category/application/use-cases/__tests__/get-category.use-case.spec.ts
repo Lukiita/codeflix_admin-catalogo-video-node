@@ -1,4 +1,4 @@
-import NotFoundError from '../../../../@seedwork/domain/errors/not-found.error';
+import NotFoundError from '@seedwork/domain/errors/not-found.error';
 import { Category } from '../../../domain/entities/category';
 import CategoryInMemoryRepository from '../../../infra/repositories/category-in-memory.repository';
 import GetCategoryUseCase from '../get-category.use-case';

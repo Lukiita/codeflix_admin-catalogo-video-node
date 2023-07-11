@@ -1,4 +1,4 @@
-import IUseCase from '../../../@seedwork/application/use-case';
+import IUseCase from '@seedwork/application/use-case';
 import CategoryRepository from '../../domain/repositories/category.repository';
 
 export default class DeleteCategoryUseCase implements IUseCase<Input, Output> {
