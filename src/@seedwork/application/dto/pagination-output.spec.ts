@@ -1,4 +1,4 @@
-import { SearchResult } from '@seedwork/domain/repositories/repository-contracts';
+import { SearchResult } from '#seedwork/domain/repositories/repository-contracts';
 import { PaginationOutputMapper } from './pagination-output';
 
 

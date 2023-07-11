@@ -3,13 +3,19 @@
   "version": "1.0.0",
   "description": "Admin do catálogo de vídeos",
   "main": "index.js",
+  "imports": {
+    "#seedwork/*": "./dist/@seedwork/*.js",
+    "#category/*": "./dist/@category/*.js"
+  },
   "scripts": {
     "ts-node": "ts-node",
     "tsc": "tsc",
     "tsc:check": "npm run tsc -- --noEmit",
     "clean:tsc": "rm tsconfig.tsbuildinfo",
     "test": "jest",
-    "test:cov": "npm run test -- --coverage"
+    "test:cov": "npm run test -- --coverage",
+    "cti": "cti",
+    "cti:@core": "sh ./cti.sh"
   },
   "repository": {
     "type": "git",
@@ -28,6 +34,7 @@
     "@types/jest": "^29.5.0",
     "@types/node": "14.14.31",
     "@types/uuid": "^9.0.1",
+    "create-ts-index": "^1.14.0",
     "jest": "^29.5.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
