@@ -14,7 +14,9 @@
     "./src/nestjs"
   ],
   "scripts": {
-   "start:dev": "npm run start:dev -w nestjs"
+    "prestart:dev": "npm run build -w codeflix",
+    "start:dev": "npm run build:w -w codeflix & npm run start:dev -w nestjs",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
