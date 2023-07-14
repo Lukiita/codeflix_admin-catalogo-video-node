@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { Category } from 'codeflix/category/domain';
+import { CreateCategoryUseCase } from 'codeflix/category/application';
 import { AppService } from './app.service';
 @Controller()
 export class AppController {
@@ -7,7 +7,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    console.log(Category)
+    console.log(CreateCategoryUseCase.UseCase)
     return this.appService.getHello();
   }
 }

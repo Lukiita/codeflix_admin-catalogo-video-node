@@ -4,5 +4,6 @@ services:
   app:
     build: .
     container_name: codeflix-typescript-app
+    command: .docker/start.sh
     volumes:
       - .:/home/node/app

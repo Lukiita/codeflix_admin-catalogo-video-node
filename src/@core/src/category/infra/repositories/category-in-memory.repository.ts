@@ -3,7 +3,7 @@ import { SortDirection } from '#seedwork/domain/repositories/repository-contract
 import { Category } from '../../domain/entities/category';
 import CategoryRepository from '../../domain/repositories/category.repository';
 
-export default class CategoryInMemoryRepository extends InMemorySearchableRepository<Category> implements CategoryRepository.Repository {
+export class CategoryInMemoryRepository extends InMemorySearchableRepository<Category> implements CategoryRepository.Repository {
   sortableFields: string[] = ['name', 'created_at'];
 
   protected async applyFilter(items: Category[], filter: CategoryRepository.Filter): Promise<Category[]> {
@@ -20,3 +20,5 @@ export default class CategoryInMemoryRepository extends InMemorySearchableReposi
       super.applySort(items, sort, sort_dir);
   }
 }
+
+export default CategoryInMemoryRepository;
