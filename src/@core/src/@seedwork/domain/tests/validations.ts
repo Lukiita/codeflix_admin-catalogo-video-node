@@ -2,7 +2,6 @@ import { EntityValidationError } from '../errors/validation-error';
 import ClassValidatorFields from '../validators/class-validator-fields';
 import { FieldsErros } from '../validators/validator-fields.interface';
 
-
 type Expected = { validator: ClassValidatorFields<any>, data: any } | (() => any);
 
 expect.extend({

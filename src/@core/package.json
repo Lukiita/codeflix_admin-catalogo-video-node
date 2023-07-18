@@ -4,6 +4,7 @@
   "description": "Admin do catálogo de vídeos",
   "main": "index.js",
   "imports": {
+    "#seedwork/domain": "./dist/@seedwork/domain/index.js",
     "#seedwork/*": "./dist/@seedwork/*.js",
     "#category/*": "./dist/category/*.js"
   },
