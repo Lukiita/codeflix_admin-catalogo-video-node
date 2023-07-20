@@ -1,7 +1,7 @@
 import { InMemorySearchableRepository } from '#seedwork/domain/repositories/in-memory.repository';
 import { SortDirection } from '#seedwork/domain/repositories/repository-contracts';
-import { Category } from '../../domain/entities/category';
-import CategoryRepository from '../../domain/repositories/category.repository';
+import { Category } from '../../../../domain/entities/category';
+import CategoryRepository from '../../../../domain/repositories/category.repository';
 
 export class CategoryInMemoryRepository extends InMemorySearchableRepository<Category> implements CategoryRepository.Repository {
   sortableFields: string[] = ['name', 'created_at'];
