@@ -57,6 +57,48 @@ describe('CategorySequelizeRepository E2E Tests', () => {
     });
   });
 
+  describe('update method', () => {
+    it('should throw error on update when entity not found', async () => {
+      const entity = new Category({ name: 'Movie' });
+      await expect(repository.update(entity)).rejects.toThrow(
+        new NotFoundError(`Entity Not Found using ID ${entity.id}`)
+      );
+    });
+
+    it('should throw error on update when entity not found', async () => {
+      const entity = new Category({ name: 'Movie' });
+      await repository.insert(entity);
+
+      entity.update('Cartoon', 'Some description');
+      await repository.update(entity);
+      const entityUpdated = await repository.findById(entity.id);
+
+      expect(entityUpdated).toMatchObject({
+        name: 'Cartoon',
+        description: 'Some description'
+      });
+    });
+  });
+
+  describe('delete method', () => {
+    it('should throw error on delete when entity not found', async () => {
+      const entity = new Category({ name: 'Movie' });
+      await expect(repository.delete(entity.id)).rejects.toThrow(
+        new NotFoundError(`Entity Not Found using ID ${entity.id}`)
+      );
+    });
+
+    it('should throw error on update when entity not found', async () => {
+      const entity = new Category({ name: 'Movie' });
+      await repository.insert(entity);
+
+      await repository.delete(entity.id);
+      const entityFound = await CategorySequelize.CategoryModel.findByPk(entity.id);
+
+      expect(entityFound).toBeNull();
+    });
+  });
+
   describe('findAll method', () => {
     it('should return all categories', async () => {
       const entity = new Category({ name: 'Movie' });
@@ -339,7 +381,7 @@ describe('CategorySequelizeRepository E2E Tests', () => {
         {
           params: new CategoryRepository.SearchParams({ page: 2, per_page: 2, sort: 'name', filter: 'TEST' }),
           result: new CategoryRepository.SearchResult({
-            items:  [
+            items: [
               new Category(categoriesProp[0])
             ],
             total: 3,
@@ -356,7 +398,7 @@ describe('CategorySequelizeRepository E2E Tests', () => {
         await CategorySequelize.CategoryModel.bulkCreate(categoriesProp);
       });
 
-      test.each(arrange)('when value is %j', async  ({params, result}) => {
+      test.each(arrange)('when value is %j', async ({ params, result }) => {
         let searchResult = await repository.search(params);
         expect(searchResult.toJSON(true)).toStrictEqual(result.toJSON(true));
       });

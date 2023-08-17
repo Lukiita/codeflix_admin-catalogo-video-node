@@ -80,8 +80,18 @@ export namespace CategorySequelize {
       return models.map(m => CategoryModelMapper.toEntity(m));
     }
 
-    public async update(entity: Category): Promise<void> { }
-    public async delete(id: string | UniqueEntityId): Promise<void> { }
+    public async update(entity: Category): Promise<void> {
+      await this._get(entity.id);
+      await this.categoryModel.update(entity.toJSON(), {
+        where: { id: entity.id }
+      });
+    }
+
+    public async delete(id: string | UniqueEntityId): Promise<void> {
+      const _id = `${id}`;
+      await this._get(_id);
+      this.categoryModel.destroy({ where: { id: _id } });
+    }
 
     public async search(props: CategoryRepository.SearchParams): Promise<CategoryRepository.SearchResult> {
       const offset = (props.page - 1) * props.per_page; // 1 * 15 = 15
