@@ -2,27 +2,22 @@ import { Category, CategoryRepository } from '#category/domain';
 import { NotFoundError, UniqueEntityId } from '#seedwork/domain';
 import { setupSequelize } from '#seedwork/infra';
 import _chance from 'chance';
-import { CategoryModelMapper } from './category-mapper';
-import { CategorySequelizeRepository } from './category-repository';
-import { CategoryModel } from './category.model';
+import { CategorySequelize } from './category-sequelize';
+
+const chance = new _chance();
 describe('CategorySequelizeRepository E2E Tests', () => {
-  let chance: Chance.Chance;
-
-  setupSequelize({ models: [CategoryModel] });
-  let repository: CategorySequelizeRepository;
-
-  beforeAll(() => chance = new _chance());
+  setupSequelize({ models: [CategorySequelize.CategoryModel] });
+  let repository: CategorySequelize.CategorySequelizeRepository;
 
   beforeEach(async () => {
-
-    repository = new CategorySequelizeRepository(CategoryModel);
+    repository = new CategorySequelize.CategorySequelizeRepository(CategorySequelize.CategoryModel);
   });
 
   describe('create method', () => {
     it('should inserts a new entity', async () => {
       const category = new Category({ name: 'Movie' });
       await repository.insert(category);
-      const model = await CategoryModel.findByPk(category.id);
+      const model = await CategorySequelize.CategoryModel.findByPk(category.id);
       expect(model.toJSON()).toStrictEqual(category.toJSON());
 
       const category2 = new Category({
@@ -31,7 +26,7 @@ describe('CategorySequelizeRepository E2E Tests', () => {
         is_active: false
       });
       await repository.insert(category2);
-      const model2 = await CategoryModel.findByPk(category2.id);
+      const model2 = await CategorySequelize.CategoryModel.findByPk(category2.id);
       expect(model2.toJSON()).toStrictEqual(category2.toJSON());
     });
   });
@@ -75,14 +70,14 @@ describe('CategorySequelizeRepository E2E Tests', () => {
   describe('search method', () => {
     it('should only apply paginate when other params are null', async () => {
       const created_at = new Date();
-      await CategoryModel.factory().count(16).bulkCreate(() => ({
+      await CategorySequelize.CategoryModel.factory().count(16).bulkCreate(() => ({
         id: chance.guid({ version: 4 }),
         name: 'Movie',
         description: null,
         is_active: true,
         created_at,
       }));
-      const spyToEntity = jest.spyOn(CategoryModelMapper, 'toEntity');
+      const spyToEntity = jest.spyOn(CategorySequelize.CategoryModelMapper, 'toEntity');
       const searchOutput = await repository.search(new CategoryRepository.SearchParams());
       expect(searchOutput).toBeInstanceOf(CategoryRepository.SearchResult);
       expect(spyToEntity).toHaveBeenCalledTimes(15);
@@ -114,7 +109,7 @@ describe('CategorySequelizeRepository E2E Tests', () => {
 
     it('should order by created_at DESC when search params are null', async () => {
       const createdAt = new Date();
-      await CategoryModel
+      await CategorySequelize.CategoryModel
         .factory()
         .count(16)
         .bulkCreate((index) => ({
@@ -140,13 +135,13 @@ describe('CategorySequelizeRepository E2E Tests', () => {
       }
 
       const categoriesProp = [
-        { id: chance.guid({ version: 4 }), name: 'name value', price: 5, ...defaultProps },
-        { id: chance.guid({ version: 4 }), name: 'test', price: 10, ...defaultProps },
-        { id: chance.guid({ version: 4 }), name: 'TEST', price: 15, ...defaultProps },
-        { id: chance.guid({ version: 4 }), name: 'a', price: 0, ...defaultProps },
-        { id: chance.guid({ version: 4 }), name: 'TeSt', price: 5, ...defaultProps },
+        { id: chance.guid({ version: 4 }), name: 'name value', ...defaultProps },
+        { id: chance.guid({ version: 4 }), name: 'test', ...defaultProps },
+        { id: chance.guid({ version: 4 }), name: 'TEST', ...defaultProps },
+        { id: chance.guid({ version: 4 }), name: 'a', ...defaultProps },
+        { id: chance.guid({ version: 4 }), name: 'TeSt', ...defaultProps },
       ];
-      const categories = await CategoryModel.bulkCreate(categoriesProp);
+      const categories = await CategorySequelize.CategoryModel.bulkCreate(categoriesProp);
 
       let searchOutput = await repository.search(
         new CategoryRepository.SearchParams({ page: 1, per_page: 2, filter: 'TEST' })
@@ -154,8 +149,8 @@ describe('CategorySequelizeRepository E2E Tests', () => {
       expect(searchOutput.toJSON(true)).toStrictEqual(
         new CategoryRepository.SearchResult({
           items: [
-            CategoryModelMapper.toEntity(categories[1]),
-            CategoryModelMapper.toEntity(categories[2]),
+            CategorySequelize.CategoryModelMapper.toEntity(categories[1]),
+            CategorySequelize.CategoryModelMapper.toEntity(categories[2]),
           ],
           total: 3,
           current_page: 1,
@@ -172,7 +167,7 @@ describe('CategorySequelizeRepository E2E Tests', () => {
       expect(searchOutput.toJSON(true)).toStrictEqual(
         new CategoryRepository.SearchResult({
           items: [
-            CategoryModelMapper.toEntity(categories[4]),
+            CategorySequelize.CategoryModelMapper.toEntity(categories[4]),
           ],
           total: 3,
           current_page: 2,
@@ -182,6 +177,189 @@ describe('CategorySequelizeRepository E2E Tests', () => {
           filter: 'TEST',
         }).toJSON(true)
       );
+    });
+
+    it('should apply paginate and sort', async () => {
+      const created_at = new Date();
+      expect(repository.sortableFields).toStrictEqual(['name', 'created_at']);
+      const defaultProps = {
+        description: null,
+        is_active: true
+      }
+
+      const categoriesProp = [
+        {
+          id: chance.guid({ version: 4 }),
+          name: 'b',
+          created_at: new Date(created_at.getTime() + 1000),
+          ...defaultProps
+        },
+        {
+          id: chance.guid({ version: 4 }),
+          name: 'a',
+          created_at: new Date(created_at.getTime() + 2000),
+          ...defaultProps
+        },
+        {
+          id: chance.guid({ version: 4 }),
+          name: 'd',
+          created_at: new Date(created_at.getTime() + 3000),
+          ...defaultProps
+        },
+        {
+          id: chance.guid({ version: 4 }),
+          name: 'e',
+          created_at: new Date(created_at.getTime() + 4000),
+          ...defaultProps
+        },
+        {
+          id: chance.guid({ version: 4 }),
+          name: 'c',
+          created_at: new Date(created_at.getTime() + 5000),
+          ...defaultProps
+        },
+      ];
+      const categories = await CategorySequelize.CategoryModel.bulkCreate(categoriesProp);
+
+      const arrange = [
+        {
+          params: new CategoryRepository.SearchParams({ page: 1, per_page: 2, sort: 'name' }),
+          result: new CategoryRepository.SearchResult({
+            items: [
+              CategorySequelize.CategoryModelMapper.toEntity(categories[1]),
+              CategorySequelize.CategoryModelMapper.toEntity(categories[0]),
+            ],
+            total: 5,
+            current_page: 1,
+            per_page: 2,
+            sort: 'name',
+            sort_dir: 'asc',
+            filter: null,
+          }),
+        },
+        {
+          params: new CategoryRepository.SearchParams({ page: 2, per_page: 2, sort: 'name' }),
+          result: new CategoryRepository.SearchResult({
+            items: [
+              CategorySequelize.CategoryModelMapper.toEntity(categories[4]),
+              CategorySequelize.CategoryModelMapper.toEntity(categories[2]),
+            ],
+            total: 5,
+            current_page: 2,
+            per_page: 2,
+            sort: 'name',
+            sort_dir: 'asc',
+            filter: null,
+          }),
+        },
+        {
+          params: new CategoryRepository.SearchParams({ page: 1, per_page: 2, sort: 'name', sort_dir: 'desc' }),
+          result: new CategoryRepository.SearchResult({
+            items: [
+              CategorySequelize.CategoryModelMapper.toEntity(categories[3]),
+              CategorySequelize.CategoryModelMapper.toEntity(categories[2]),
+            ],
+            total: 5,
+            current_page: 1,
+            per_page: 2,
+            sort: 'name',
+            sort_dir: 'desc',
+            filter: null,
+          }),
+        },
+        {
+          params: new CategoryRepository.SearchParams({ page: 2, per_page: 2, sort: 'name', sort_dir: 'desc' }),
+          result: new CategoryRepository.SearchResult({
+            items: [
+              CategorySequelize.CategoryModelMapper.toEntity(categories[4]),
+              CategorySequelize.CategoryModelMapper.toEntity(categories[0]),
+            ],
+            total: 5,
+            current_page: 2,
+            per_page: 2,
+            sort: 'name',
+            sort_dir: 'desc',
+            filter: null,
+          }),
+        },
+        {
+          params: new CategoryRepository.SearchParams({ page: 1, per_page: 2, sort: 'is_active', sort_dir: 'desc' }),
+          result: new CategoryRepository.SearchResult({
+            items: [
+              CategorySequelize.CategoryModelMapper.toEntity(categories[4]),
+              CategorySequelize.CategoryModelMapper.toEntity(categories[3]),
+            ],
+            total: 5,
+            current_page: 1,
+            per_page: 2,
+            sort: 'is_active',
+            sort_dir: 'desc',
+            filter: null,
+          }),
+        },
+      ];
+
+      for (const i of arrange) {
+        let result = await repository.search(i.params);
+        expect(result.toJSON(true)).toStrictEqual(i.result.toJSON(true));
+      }
+    });
+
+    describe('should search using filter, sort and paginate', () => {
+      const defaultProps = {
+        description: null,
+        is_active: true,
+        created_at: new Date(),
+      }
+
+      const categoriesProp = [
+        { id: chance.guid({ version: 4 }), name: 'test', ...defaultProps },
+        { id: chance.guid({ version: 4 }), name: 'a', ...defaultProps },
+        { id: chance.guid({ version: 4 }), name: 'TEST', ...defaultProps },
+        { id: chance.guid({ version: 4 }), name: 'e', ...defaultProps },
+        { id: chance.guid({ version: 4 }), name: 'TeSt', ...defaultProps },
+      ];
+
+      const arrange = [
+        {
+          params: new CategoryRepository.SearchParams({ page: 1, per_page: 2, sort: 'name', filter: 'TEST' }),
+          result: new CategoryRepository.SearchResult({
+            items: [
+              new Category(categoriesProp[2]),
+              new Category(categoriesProp[4])
+            ],
+            total: 3,
+            current_page: 1,
+            per_page: 2,
+            sort: 'name',
+            sort_dir: 'asc',
+            filter: 'TEST',
+          }),
+        },
+        {
+          params: new CategoryRepository.SearchParams({ page: 2, per_page: 2, sort: 'name', filter: 'TEST' }),
+          result: new CategoryRepository.SearchResult({
+            items:  [
+              new Category(categoriesProp[0])
+            ],
+            total: 3,
+            current_page: 2,
+            per_page: 2,
+            sort: 'name',
+            sort_dir: 'asc',
+            filter: 'TEST',
+          }),
+        },
+      ];
+
+      beforeEach(async () => {
+        await CategorySequelize.CategoryModel.bulkCreate(categoriesProp);
+      });
+
+      test.each(arrange)('when value is %j', async  ({params, result}) => {
+        let searchResult = await repository.search(params);
+        expect(searchResult.toJSON(true)).toStrictEqual(result.toJSON(true));
+      });
     });
   });
 

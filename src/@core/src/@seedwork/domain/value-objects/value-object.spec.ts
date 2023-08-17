@@ -14,7 +14,7 @@ describe('ValueObject Unit Tests', () => {
     expect(vo.value).toStrictEqual({prop: 'value'});
   });
 
-  it('should convert to a string', () => {
+  describe('should convert to a string', () => {
     const date = new Date();
     let arrange = [
       { received: "", expected: "" },
@@ -31,9 +31,9 @@ describe('ValueObject Unit Tests', () => {
       },
     ];
 
-    arrange.forEach(value => {
-      const vo = new StubValueObject(value.received);
-      expect(vo + '').toBe(value.expected);
+    test.each(arrange)('from $received to $expected', ({received, expected}) => {
+      const vo = new StubValueObject(received);
+      expect(vo + '').toBe(expected);
     });
   });
 
