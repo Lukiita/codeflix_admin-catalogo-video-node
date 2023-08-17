@@ -1,7 +1,7 @@
 import NotFoundError from '#seedwork/domain/errors/not-found.error';
-import { Category } from '../../../../category/domain/entities/category';
-import CategoryInMemoryRepository from '../../../infra/db/repositories/in-memory/category-in-memory.repository';
-import { DeleteCategoryUseCase } from '../delete-category.use-case';
+import { Category } from '../../../../../category/domain/entities/category';
+import CategoryInMemoryRepository from '../../../../infra/db/repositories/in-memory/category-in-memory.repository';
+import { DeleteCategoryUseCase } from '../../delete-category.use-case';
 
 describe('DeleteCategoryUseCase Unit Tests', () => {
   let useCase: DeleteCategoryUseCase.UseCase;
@@ -12,8 +12,8 @@ describe('DeleteCategoryUseCase Unit Tests', () => {
     useCase = new DeleteCategoryUseCase.UseCase(repository);
   });
 
-  it('should throws error when entity not found', () => {
-    expect(() => useCase.execute({ id: 'fake_id'})).rejects.toThrow(
+  it('should throws error when entity not found', async () => {
+    await expect(() => useCase.execute({ id: 'fake_id'})).rejects.toThrow(
       new NotFoundError('Entity Not Found using ID fake_id')
     );
   });

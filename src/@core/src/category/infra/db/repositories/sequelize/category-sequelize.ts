@@ -1,4 +1,4 @@
-import { Category, CategoryRepository } from '#category/domain';
+import { Category, CategoryRepository as CategoryRepositoryContract } from '#category/domain';
 import { EntityValidationError, LoadEntityError, NotFoundError, UniqueEntityId } from '#seedwork/domain';
 import { SequelizeModelFactory } from '#seedwork/infra';
 import { Op } from 'sequelize';
@@ -60,7 +60,7 @@ export namespace CategorySequelize {
     }
   }
 
-  export class CategorySequelizeRepository implements CategoryRepository.Repository {
+  export class CategoryRepository implements CategoryRepositoryContract.Repository {
     sortableFields: string[] = ['name', 'created_at'];
 
     constructor(private categoryModel: typeof CategoryModel) { }
@@ -93,7 +93,7 @@ export namespace CategorySequelize {
       this.categoryModel.destroy({ where: { id: _id } });
     }
 
-    public async search(props: CategoryRepository.SearchParams): Promise<CategoryRepository.SearchResult> {
+    public async search(props: CategoryRepositoryContract.SearchParams): Promise<CategoryRepositoryContract.SearchResult> {
       const offset = (props.page - 1) * props.per_page; // 1 * 15 = 15
       const limit = props.per_page; // 15 + 15 = 30
 
@@ -116,7 +116,7 @@ export namespace CategorySequelize {
         offset,
         limit,
       });
-      return new CategoryRepository.SearchResult({
+      return new CategoryRepositoryContract.SearchResult({
         items: models.map(m => CategoryModelMapper.toEntity(m)),
         current_page: props.page,
         per_page: props.per_page,

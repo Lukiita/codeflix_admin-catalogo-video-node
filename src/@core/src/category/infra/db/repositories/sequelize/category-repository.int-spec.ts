@@ -7,10 +7,10 @@ import { CategorySequelize } from './category-sequelize';
 const chance = new _chance();
 describe('CategorySequelizeRepository E2E Tests', () => {
   setupSequelize({ models: [CategorySequelize.CategoryModel] });
-  let repository: CategorySequelize.CategorySequelizeRepository;
+  let repository: CategorySequelize.CategoryRepository;
 
   beforeEach(async () => {
-    repository = new CategorySequelize.CategorySequelizeRepository(CategorySequelize.CategoryModel);
+    repository = new CategorySequelize.CategoryRepository(CategorySequelize.CategoryModel);
   });
 
   describe('create method', () => {
